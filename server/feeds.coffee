@@ -1,4 +1,5 @@
-Npm.require 'feedparser'
+Meteor.methods
+  addFeed: (url, userId) ->
 
 
 ###
