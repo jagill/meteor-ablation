@@ -3,7 +3,7 @@
 # feeds: []
 # postsRead: []
 ###
-@Accounts = new Meteor.Collection 'accounts'
+@UserInfos = new Meteor.Collection 'userInfos'
 
 ###
 # url:
