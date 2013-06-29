@@ -1,5 +1,10 @@
 Meteor.methods
   addFeed: (url, userId) ->
+    Meteor.http.get url, {}, (error, result) ->
+      if error
+        return
+
+      #console.log result
 
 
 ###

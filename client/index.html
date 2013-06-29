@@ -23,7 +23,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="brand" href="#">Project name</a>
+            <a class="brand" href="#">Meteor Reader</a>
             <div class="nav-collapse collapse">
                 <p class="navbar-text pull-right">
                     {{loginButtons}}
@@ -43,24 +43,8 @@
     <div class="row-fluid">
         <div class="span3">
             <div class="well sidebar-nav">
-                <ul class="nav nav-list">
-                    <li class="nav-header">Sidebar</li>
-                    <li class="active"><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li class="nav-header">Sidebar</li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li class="nav-header">Sidebar</li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                </ul>
+              {{> feeds}}
+
             </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
@@ -130,3 +114,19 @@
 <script src="js/application.js"></script>
 </body>
 
+<template name="feeds">
+  <ul class="nav nav-list">
+    <li class="nav-header">Feeds</li>
+    {{#each feeds}}
+{{! Examples of 
+
+   <li class="active"><a href="#">Link</a></li>
+    <li><a href="#">Link</a></li>
+    <li><a href="#">Link</a></li>
+    <li><a href="#">Link</a></li>
+    <li class="nav-header">Sidebar</li>
+}}
+      <li class="{{selected}}"><a class="feedLink" href="#">{{title}}</a></li>
+    {{/each}}
+  </ul>
+</template>
