@@ -27,8 +27,7 @@ window.MABL = {
         return ""
 
     Template.feeds.selectedRecent = ->
-      selectedId = Session.get "selectedFeedId"
-      if(!selectedId)
+      if(@._id)
         return "active"
       else
         return ""
@@ -133,7 +132,6 @@ window.MABL = {
 
     Template.articles.hasFeeds = ->
       return Feeds.findOne()?
-
 
   startup: ->
     @initStickyNav()
