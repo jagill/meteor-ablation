@@ -30,6 +30,25 @@ window.MABL = {
           console.log "Returned from addFeed"
         return false
 
+    Template.feeds.rendered = ->
+      readFileAsText = (file, callback)->
+        reader = new FileReader
+        reader.readAsText(file);
+        reader.onload = (event)->
+          callback(event.target.result)
+        reader.onerror = ->
+          document.getElementById('file-content').innerHTML = 'Unable to read ' + file.fileName;
+
+      document.getElementById("uploadFile").onchange = ->
+        readFileAsText @files[0], (result)->
+#          console.log "XML", result
+          parser=new DOMParser();
+          xmlDoc=parser.parseFromString(result,"text/xml")
+          window.theResult = xmlDoc
+          feedObjs = $($(theResult).children().children()[1]).children()
+          for obj in feedObjs
+            Meteor.call "addFeed", $(obj).attr("xmlUrl"), $(obj).attr("title")
+
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
       return feed.title if feed

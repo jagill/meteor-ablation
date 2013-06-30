@@ -11,7 +11,7 @@ addFeedToUser = (feedId, userId) ->
 
 
 Meteor.methods
-  addFeed: (url) ->
+  addFeed: (url, title) ->
     console.log "Adding feed for #{url} for userId #{@userId}"
     throw new Meteor.Error(401, 'Must be logged in to add a feed') unless @userId
 
@@ -30,6 +30,7 @@ Meteor.methods
           #console.log "Article count:", articles.length
           #console.log "First article:", articles[0] if articles
           data.url = url
+          data.title = title if title
           feedId = Feeds.insert data
           addFeedToUser feedId, @userId
           for article in articles
