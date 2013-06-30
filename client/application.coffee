@@ -36,17 +36,17 @@ window.MABL = {
 
       readFileAsText = (file, callback)->
         reader = new FileReader
-        reader.readAsText(file);
+        reader.readAsText(file)
         reader.onload = (event)->
           $('#importFeedModal').modal('hide')
           callback(event.target.result)
         reader.onerror = ->
-          document.getElementById('file-content').innerHTML = 'Unable to read ' + file.fileName;
+          document.getElementById('file-content').innerHTML = 'Unable to read ' + file.fileName
 
       document.getElementById("uploadFile").onchange = ->
         readFileAsText @files[0], (result)->
 #          console.log "XML", result
-          parser=new DOMParser();
+          parser=new DOMParser()
           xmlDoc=parser.parseFromString(result,"text/xml")
           window.theResult = xmlDoc
           window.crawlTree = (tree, callback)->
