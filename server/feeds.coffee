@@ -9,6 +9,10 @@ addFeedToUser = (feedId, userId) ->
     console.log "Making new userInfo"
     UserInfos.insert {userId: userId, feeds: [feedId]}
 
+Meteor.setInterval ->
+  console.log "Refreshing feeds"
+  Meteor.call 'refreshFeeds'
+, 10*1000
 
 Meteor.methods
   addFeed: (url) ->
@@ -41,18 +45,15 @@ Meteor.methods
         return console.error error if error
         rssparser.parseString response.content, {}, (error, data) =>
           posts = data.items
-          newUrls = _.pluck posts, 'url'
-          Posts.remove {url: {$nin: newUrls}}
+          #newUrls = _.pluck posts, 'url'
+          #Posts.remove {url: {$nin: newUrls}}
           for post in posts
+            post.feedId = feed._id
             existingPost = Posts.findOne url: post.url
             if existingPost
               Posts.update existingPost._id, post
             else
-              post.feedId = feed._id
               Posts.insert post
-            
-
-      
 
   removeFeed: (url) ->
     throw new Meteor.Error(401, 'Must be logged in to remove a feed') unless @userId
