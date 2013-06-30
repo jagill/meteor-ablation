@@ -38,6 +38,7 @@ Meteor.methods
           addFeedToUser feedId, @userId
           for post in posts
             post.feedId = feedId
+            post.feedTitle = data.title
             Posts.insert post
 
   refreshFeeds: ->
@@ -50,6 +51,7 @@ Meteor.methods
           #Posts.remove {url: {$nin: newUrls}}
           for post in posts
             post.feedId = feed._id
+            post.feedTitle = feed.title
             existingPost = Posts.findOne url: post.url
             if existingPost
               Posts.update existingPost._id, post
