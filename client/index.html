@@ -41,27 +41,13 @@
         <div class="span3">
             <div class="well sidebar-nav">
               {{> feeds}}
-
             </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
-            <div class="hero-unit">
-                {{> topArticle}}
-            </div>
-            <div class="row-fluid">
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>test</p>
-                </div><!--/span-->
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>test</p>
-                </div><!--/span-->
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>test</p>
-                </div><!--/span-->
-            </div><!--/row-->
+
+                {{> articles}}
+
+
         </div><!--/span-->
     </div><!--/row-->
 
@@ -125,12 +111,21 @@
 
 </template>
 
-<template name="topArticle">
-  <h1>{{feedTitle}}</h1>
-  <ul>
-  {{#each posts}}
-  <li><strong><a href="{{url}}">{{title}}</a></strong> - {{time_ago}}</li>
-  {{{summary}}}
-  {{/each}}
-  </ul>
+<template name="articles">
+
+    <div class="row-fluid">
+        <div class="span12">
+                <h1>{{feedTitle}}</h1>
+
+                {{#each posts}}
+                    <div class="article-item">
+                        <strong class="title"><a target="_blank" href="{{url}}">{{title}}</a></strong> - <span class="time">{{time_ago}}</span>
+                        <div class="summary">{{{summary}}}</div>
+                    </div>
+                {{/each}}
+
+
+            </div>
+        </div>
+    </div>
 </template>
