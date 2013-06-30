@@ -1,4 +1,11 @@
 window.MABL = {
+  seedDatabase: ->
+    console.log "seeding the database"
+    Meteor.call "addFeed", "http://feeds.feedburner.com/AVc", Meteor.userId()
+    Meteor.call "addFeed", "http://biritemarket.com/feed/", Meteor.userId()
+    Meteor.call "addFeed", "http://bootiemashup.com/blog/feed", Meteor.userId()
+    Meteor.call "addFeed", "http://blog.getbootstrap.com/feed.xml", Meteor.userId()
+
   init: ->
     Template.feeds.feeds = ->
       Feeds.find()
