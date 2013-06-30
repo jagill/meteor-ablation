@@ -24,10 +24,11 @@ window.MABL = {
       "click .feedButton": ->
         feedUrl = $("#addFeedBox").val()
         console.log "feed button clicked"
-        Meteor.call "addFeed", feedUrl, (error) ->
-            $('#addFeedModal').modal('hide')
-            return console.error "Error in addFeed:", error if error
-          console.log "Returned from addFeed"
+        Meteor.call "addFeed", feedUrl, (error, feedId) ->
+          $('#addFeedModal').modal('hide')
+          return console.error "Error in addFeed:", error if error
+          console.log "Returned from addFeed with id", feedId
+          Session.set 'selectedFeedId', feedId
         return false
 
     Template.feeds.rendered = ->
@@ -67,8 +68,9 @@ window.MABL = {
         feed = Feeds.findOne Session.get "selectedFeedId"
         throw new Meteor.Error(401, 'No feed currently selected') unless feed
         Meteor.call "removeFeed", feed.url, (error) ->
-            return console.error "Error in addFeed:", error if error
-          console.log "Returned from addFeed"
+          return console.error "Error in addFeed:", error if error
+          console.log "Returned from removeFeed"
+          Session.set 'selectedFeedId', Feeds.findOne()?._id
         return false
 
       "click .read-btn": (event) ->
