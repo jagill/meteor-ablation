@@ -14,6 +14,14 @@ window.MABL = {
         Session.set "selectedFeedId", @._id
         return false
 
+    Template.topArticle.feedTitle = ->
+      feed = Feeds.findOne Session.get "selectedFeedId"
+      return feed.title if feed
+      return "Select a feed on the left"
+
+    Template.topArticle.posts = ->
+      Posts.find feedId: Session.get("selectedFeedId")
+
   start: ->
     console.log "starting app"
 
