@@ -43,6 +43,7 @@ window.MABL = {
         reader = new FileReader
         reader.readAsText(file);
         reader.onload = (event)->
+          $('#importFeedModal').modal('hide')
           callback(event.target.result)
         reader.onerror = ->
           document.getElementById('file-content').innerHTML = 'Unable to read ' + file.fileName;
