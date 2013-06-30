@@ -121,11 +121,22 @@
     {{/each}}
   </ul>
   
-  <h3>Add Feed Here</h3>
-  <form class="addFeed">
-    <input id="addFeedBox" name="something" value="http://" />
-    <input class="feedButton" type="submit" value="Add Feed"/>
-  </form>
+
+    <button href="#addFeedModal" role="button" data-toggle="modal" id="addFeedBtn" class="btn btn-large">Add Feed</button>
+    <div id="addFeedModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Add New Feed</h3>
+        </div>
+        <div class="modal-body">
+            <form class="addFeed">
+                <input id="addFeedBox" name="something" placeholder="http://" />
+                <input class="feedButton" type="submit" value="Add Feed"/>
+            </form>
+        </div>
+    </div>
+
+
 
 </template>
 

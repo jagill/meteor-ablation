@@ -28,13 +28,18 @@ window.MABL = {
     Template.topArticle.posts = ->
       Posts.find feedId: Session.get("selectedFeedId")
 
-  start: ->
-    console.log "starting app"
+  startup: ->
+    $ ->
+      $('#addFeedBtn').click (e) ->
+        e.preventDefault()
+        console.log $('#addFeedModal')
+        $('#addFeedModal').modal()
+
 
 }
 
 window.MABL.init()
 
 Meteor.startup( () ->
-  window.MABL.start();
+  window.MABL.startup();
 )
