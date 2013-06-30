@@ -25,10 +25,11 @@ window.MABL = {
       "click .feedButton": ->
         feedUrl = $("#addFeedBox").val()
         console.log "feed button clicked"
-        Meteor.call "addFeed", feedUrl, (error) ->
-            $('#addFeedModal').modal('hide')
-            return console.error "Error in addFeed:", error if error
-          console.log "Returned from addFeed"
+        Meteor.call "addFeed", feedUrl, (error, feedId) ->
+          $('#addFeedModal').modal('hide')
+          return console.error "Error in addFeed:", error if error
+          console.log "Returned from addFeed with id", feedId
+          Session.set 'selectedFeedId', feedId
         return false
 
     Template.feeds.rendered = =>
@@ -69,15 +70,31 @@ window.MABL = {
         feed = Feeds.findOne Session.get "selectedFeedId"
         throw new Meteor.Error(401, 'No feed currently selected') unless feed
         Meteor.call "removeFeed", feed.url, (error) ->
-            return console.error "Error in addFeed:", error if error
-          console.log "Returned from addFeed"
+          return console.error "Error in addFeed:", error if error
+          console.log "Returned from removeFeed"
+          Session.set 'selectedFeedId', Feeds.findOne()?._id
         return false
 
+      "click .read-btn": (event) ->
+        console.log event
+        elId = event.target.id
+        console.log "Clicked element #{elId}"
+        postId = elId.split('_')[1]
+        userInfoId = UserInfos.findOne(userId:Meteor.userId())?._id
+        console.log "Found userInfoId #{userInfoId} for userId #{Meteor.userId()}"
+        return unless userInfoId
+        UserInfos.update userInfoId, {$push: {readPosts:postId}}
+
     Template.articles.posts = ->
+      userInfo = UserInfos.findOne(userId:Meteor.userId())
+      return unless userInfo
       if Session.get("selectedFeedId")
-        Posts.find feedId: Session.get("selectedFeedId")
+        Posts.find
+          feedId: Session.get("selectedFeedId"),
+          _id: {$nin: userInfo.readPosts}
+          
       else
-        Posts.find()
+        Posts.find _id: {$nin: userInfo.readPosts}
 
     Template.articles.hasFeeds = ->
       return Feeds.findOne()?
@@ -108,5 +125,5 @@ window.MABL = {
 window.MABL.init()
 
 Meteor.startup( () ->
-  window.MABL.startup();
+  window.MABL.startup()
 )

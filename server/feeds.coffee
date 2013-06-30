@@ -1,5 +1,8 @@
 rssparser = Meteor.require('rssparser')
 
+Accounts.onCreateUser (user) ->
+  UserInfos.insert {userId: user._id, feeds: [feedId], readPosts: []}
+
 addFeedToUser = (feedId, userId) ->
   console.log "Adding feed #{feedId} to user #{userId}"
   if UserInfos.findOne(userId: userId)
@@ -7,7 +10,7 @@ addFeedToUser = (feedId, userId) ->
     UserInfos.update {userId: userId}, {$push: {feeds: feedId}}
   else
     console.log "Making new userInfo"
-    UserInfos.insert {userId: userId, feeds: [feedId]}
+    UserInfos.insert {userId: userId, feeds: [feedId], readPosts: []}
 
 Meteor.setInterval ->
   console.log "Refreshing feeds"
@@ -22,8 +25,10 @@ Meteor.methods
     if feed
       console.log "Found existing feed for #{url}"
       addFeedToUser feed._id, @userId
+      return feed._id
     else
       console.log "Getting new feed #{url}"
+      fut = new Future()
       Meteor.http.get url, {}, (error, response) =>
         throw new Meteor.Error(500, error.message) if error
         rssparser.parseString response.content, {}, (error, data) =>
@@ -40,6 +45,8 @@ Meteor.methods
             post.feedId = feedId
             post.feedTitle = data.title
             Posts.insert post
+          fut.ret(feedId)
+      return fut.wait()
 
   refreshFeeds: ->
     Feeds.find().map (feed) ->
