@@ -46,9 +46,15 @@ window.MABL = {
           parser=new DOMParser();
           xmlDoc=parser.parseFromString(result,"text/xml")
           window.theResult = xmlDoc
-          feedObjs = $($(theResult).children().children()[1]).children()
-          for obj in feedObjs
-            Meteor.call "addFeed", $(obj).attr("xmlUrl"), $(obj).attr("title")
+          window.crawlTree = (tree, callback)->
+            for child in tree.children()
+              if $(child).children().length > 0
+                crawlTree $(child), callback
+              else if $(child).attr("xmlUrl")
+                callback $(child).attr("xmlUrl"), $(child).attr("title")
+                
+          crawlTree $(theResult), (xmlUrl, title)->
+            Meteor.call "addFeed", xmlUrl, title
 
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
@@ -59,6 +65,7 @@ window.MABL = {
       "click .removeFeedButton": ->
         console.log "remove feed button clicked"
         feed = Feeds.findOne Session.get "selectedFeedId"
+        throw new Meteor.Error(401, 'No feed currently selected') unless feed
         Meteor.call "removeFeed", feed.url, (error) ->
             return console.error "Error in addFeed:", error if error
           console.log "Returned from addFeed"
@@ -69,6 +76,10 @@ window.MABL = {
         Posts.find feedId: Session.get("selectedFeedId")
       else
         Posts.find()
+
+    Template.articles.hasFeeds = ->
+      return Feeds.findOne()?
+
 
   startup: ->
     @initStickyNav()
