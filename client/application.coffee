@@ -86,15 +86,14 @@ window.MABL = {
         UserInfos.update userInfoId, {$push: {readPosts:postId}}
 
     Template.articles.posts = ->
-      userInfo = UserInfos.findOne(userId:Meteor.userId())
-      return unless userInfo
+      readPosts = UserInfos.findOne(userId:Meteor.userId())?.readPosts || []
       if Session.get("selectedFeedId")
         Posts.find
           feedId: Session.get("selectedFeedId"),
-          _id: {$nin: userInfo.readPosts}
+          _id: {$nin: readPosts}
           
       else
-        Posts.find _id: {$nin: userInfo.readPosts}
+        Posts.find _id: {$nin: readPosts}
 
     Template.articles.hasFeeds = ->
       return Feeds.findOne()?
