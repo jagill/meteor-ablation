@@ -36,6 +36,7 @@ Meteor.methods
             Posts.insert article
 
 removeFeed: (url) ->
+  throw new Meteor.Error(401, 'Must be logged in to remove a feed') unless @userId
   feed = Feeds.findOne url:url
   if feed
     console.log "Feed at #{url} exist, removing for user #{@userId}"
