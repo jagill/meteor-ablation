@@ -38,10 +38,12 @@ Meteor.methods
 removeFeed: (url) ->
   feed = Feeds.findOne url:url
   if feed
+    console.log "Feed at #{url} exist, removing for user #{@userId}"
     Posts.remove {feedId: feed.feedId}
 
     userfeeds = UserInfos.findOne({userId: @userId}).feeds
     if(userfeeds)
+      console.log "Found feeds array, removing feed #{feed.feedId} from it"
       index = userfeeds.indexOf feed.feedId
       userfeeds.splice index, 1
       UserInfos.update {userId: @userId}, {$push: {feeds: userfeeds}}
