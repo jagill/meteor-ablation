@@ -9,13 +9,15 @@ Meteor.publish 'feeds', ->
 
 Meteor.publish 'posts', (feedId) ->
   return unless feedId
-  return Posts.find feedId:feedId
+  readPosts = UserInfos.findOne(userId:@userId)?.readPosts || []
+  return Posts.find {feedId:feedId, _id: {$nin: readPosts}}
 
 Meteor.publish 'recentPosts', ->
   return unless @userId
-  return unless userInfo
   userInfo = UserInfos.findOne userId:@userId
-  return Posts.find {feedId: {$in: userInfo.feeds}}, {sort: {published_at: -1}, limit: 5}
+  return unless userInfo
+  readPosts = UserInfos.findOne(userId:@userId)?.readPosts || []
+  return Posts.find {feedId: {$in: userInfo.feeds}, _id: {$nin: readPosts}}, {sort: {published_at: -1}, limit: 5}
 
 UserInfos.allow
   update: (userId, doc, fieldNames, modifier) ->
