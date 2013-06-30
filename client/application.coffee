@@ -30,14 +30,6 @@ window.MABL = {
           console.log "Returned from addFeed"
         return false
 
-      "click .removeFeedButton": ->
-        console.log "remove feed button clicked"
-        feed = Feeds.findOne Session.get "selectedFeedId"
-        Meteor.call "removeFeed", feed.url, (error) ->
-          return console.error "Error in addFeed:", error if error
-          console.log "Returned from addFeed"
-        return false
-
     Template.feeds.rendered = ->
       readFileAsText = (file, callback)->
         reader = new FileReader
@@ -61,10 +53,22 @@ window.MABL = {
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
       return feed.title if feed
-      return "Select a feed on the left"
+      return "Recent Posts"
+
+    Template.articles.events
+      "click .removeFeedButton": ->
+        console.log "remove feed button clicked"
+        feed = Feeds.findOne Session.get "selectedFeedId"
+        Meteor.call "removeFeed", feed.url, (error) ->
+            return console.error "Error in addFeed:", error if error
+          console.log "Returned from addFeed"
+        return false
 
     Template.articles.posts = ->
-      Posts.find feedId: Session.get("selectedFeedId")
+      if Session.get("selectedFeedId")
+        Posts.find feedId: Session.get("selectedFeedId")
+      else
+        Posts.find()
 
   startup: ->
     console.log "starting up"
