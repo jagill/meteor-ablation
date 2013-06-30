@@ -152,9 +152,11 @@ window.MABL = {
     $(window).scroll ->
       belowThreshold = $(window).scrollTop() >= threshold
       if not fixed and belowThreshold and navBar.outerHeight() < $(window).height()
+        navBar.css "width":navBar.width()
         navBar.addClass "fixed"
         fixed = true
       else if fixed and not belowThreshold
+        navBar.css "width":"auto"
         navBar.removeClass "fixed"
         fixed = false
 }
