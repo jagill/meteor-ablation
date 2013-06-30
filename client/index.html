@@ -66,6 +66,7 @@
 </body>
 
 <template name="feeds">
+{{#if currentUser}}
   <ul class="feed-list nav nav-list">
     <li class="nav-header">Feeds</li>
       <li class="{{selectedRecent}}"><a class="recentLink" href="#">Recent Posts</a></li>
@@ -73,7 +74,6 @@
       <li class="{{selected}}"><a class="feedLink" href="#">{{title}}</a></li>
     {{/each}}
   </ul>
-
     <div class="add-feed-form feed-form">
         <button href="#addFeedModal" role="button" data-toggle="modal" id="addFeedBtn" class="btn btn-large">Add Feed</button>
         <div id="addFeedModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -110,7 +110,7 @@
             </div>
         </div>
     </div>
-
+{{/if}}
 
 
 </template>
