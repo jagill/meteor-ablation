@@ -61,10 +61,13 @@ window.MABL = {
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
       return feed.title if feed
-      return "Select a feed on the left"
+      return "Recent Posts"
 
     Template.articles.posts = ->
-      Posts.find feedId: Session.get("selectedFeedId")
+      if Session.get("selectedFeedId")
+        Posts.find feedId: Session.get("selectedFeedId")
+      else
+        Posts.find()
 
   startup: ->
     console.log "starting up"
