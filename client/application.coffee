@@ -14,6 +14,12 @@ window.MABL = {
         Session.set "selectedFeedId", @._id
         return false
 
+      "click .feedButton": ->
+        feedUrl = $("#addFeedBox").val()
+        Meteor.call "addFeed", feedUrl, Meteor.userId()
+        console.log "feed button clicked" 
+        return false
+
     Template.topArticle.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
       return feed.title if feed
