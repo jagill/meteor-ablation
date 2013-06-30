@@ -1,4 +1,12 @@
 
+.navbar .brand {
+    font-size:.9em;
+    text-decoration: none;
+}
+
+.brand img {
+    margin-right:10px;
+}
 
 /* Large desktop */
 @media (min-width: 1200px) {
