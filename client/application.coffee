@@ -30,12 +30,12 @@ window.MABL = {
           console.log "Returned from addFeed"
         return false
 
-    Template.topArticle.feedTitle = ->
+    Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
       return feed.title if feed
       return "Select a feed on the left"
 
-    Template.topArticle.posts = ->
+    Template.articles.posts = ->
       Posts.find feedId: Session.get("selectedFeedId")
 
   startup: ->
