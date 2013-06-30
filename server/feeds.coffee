@@ -28,7 +28,9 @@ Meteor.methods
       console.log "Getting new feed #{url}"
       future = new Future()
       Meteor.http.get url, {}, (error, response) =>
-        throw new Meteor.Error(500, error.message) if error
+        if response.statusCode in [401, 403, 404]
+          return future.ret null
+        throw new Meteor.Error(response.statusCode, error.message) if error
         rssparser.parseString response.content, {}, (error, data) =>
           posts = data.items
           delete data.items

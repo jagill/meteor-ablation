@@ -60,8 +60,8 @@ window.MABL = {
 #          console.log "XML", result
           parser=new DOMParser()
           xmlDoc=parser.parseFromString(result,"text/xml")
-          window.theResult = xmlDoc
-          window.crawlTree = (tree, callback)->
+          theResult = xmlDoc
+          crawlTree = (tree, callback)->
             for child in tree.children()
               if $(child).children().length > 0
                 crawlTree $(child), callback
