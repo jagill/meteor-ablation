@@ -8,7 +8,9 @@ window.MABL = {
 
   init: ->
     addFeedToUser = (value) ->
-      return unless Meteor.userId()
+      unless Meteor.userId()
+        console.error "NO USER FOUND"
+        return
       userInfo = UserInfos.findOne(userId:Meteor.userId())
       if userInfo
         UserInfos.update userInfo._id, {$push: {feeds:value}}
@@ -87,6 +89,7 @@ window.MABL = {
                 
           crawlTree $(theResult), (xmlUrl, title)->
             Meteor.call "addFeed", xmlUrl, title, (error, feedId) ->
+              console.log "ADDING FEED TO USER", feedId
               addFeedToUser feedId if feedId
             
     Template.articles.feedTitle = ->
