@@ -60,8 +60,8 @@ window.MABL = {
 #          console.log "XML", result
           parser=new DOMParser()
           xmlDoc=parser.parseFromString(result,"text/xml")
-          window.theResult = xmlDoc
-          window.crawlTree = (tree, callback)->
+          theResult = xmlDoc
+          crawlTree = (tree, callback)->
             for child in tree.children()
               if $(child).children().length > 0
                 crawlTree $(child), callback
@@ -69,8 +69,8 @@ window.MABL = {
                 callback $(child).attr("xmlUrl"), $(child).attr("title")
                 
           crawlTree $(theResult), (xmlUrl, title)->
-            Meteor.call "addFeed", xmlUrl, title
-            Session.set 'subscribeHack', Meteor.uuid()
+            Meteor.call "addFeed", xmlUrl, title, (error, feedId) ->
+              Session.set 'subscribeHack', Meteor.uuid() unless error
             
 
     Template.articles.feedTitle = ->
