@@ -85,6 +85,11 @@ h1 {
     text-decoration: none;
 }
 
+input[type="file"] {
+    line-height: normal;
+    margin-top:10px;
+}
+
 .feed-form {
     padding:20px 20px 0 15px;
 }

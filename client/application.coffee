@@ -35,6 +35,7 @@ window.MABL = {
         reader = new FileReader
         reader.readAsText(file);
         reader.onload = (event)->
+          $('#importFeedModal').modal('hide')
           callback(event.target.result)
         reader.onerror = ->
           document.getElementById('file-content').innerHTML = 'Unable to read ' + file.fileName;
@@ -52,7 +53,7 @@ window.MABL = {
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
       return feed.title if feed
-      return "Select a feed on the left"
+      return "Recent Posts"
 
     Template.articles.events
       "click .removeFeedButton": ->
@@ -64,7 +65,10 @@ window.MABL = {
         return false
 
     Template.articles.posts = ->
-      Posts.find feedId: Session.get("selectedFeedId")
+      if Session.get("selectedFeedId")
+        Posts.find feedId: Session.get("selectedFeedId")
+      else
+        Posts.find()
 
   startup: ->
     console.log "starting up"
