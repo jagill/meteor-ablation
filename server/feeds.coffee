@@ -11,6 +11,7 @@ addFeedToUser = (feedId, userId) ->
   else
     console.log "Making new userInfo"
     UserInfos.insert {userId: userId, feeds: [feedId], readPosts: []}
+Future = Npm.require('fibers/future')
 
 Meteor.setInterval ->
   console.log "Refreshing feeds"
@@ -28,15 +29,12 @@ Meteor.methods
       return feed._id
     else
       console.log "Getting new feed #{url}"
-      fut = new Future()
+      future = new Future()
       Meteor.http.get url, {}, (error, response) =>
         throw new Meteor.Error(500, error.message) if error
         rssparser.parseString response.content, {}, (error, data) =>
           posts = data.items
           delete data.items
-          #console.log "Feed:", data
-          #console.log "Article count:", posts.length
-          #console.log "First article:", posts[0] if posts
           data.url = url
           data.title = title if title
           feedId = Feeds.insert data
@@ -45,8 +43,8 @@ Meteor.methods
             post.feedId = feedId
             post.feedTitle = data.title
             Posts.insert post
-          fut.ret(feedId)
-      return fut.wait()
+          future.ret(feedId)
+      return future.wait()
 
   refreshFeeds: ->
     Feeds.find().map (feed) ->
