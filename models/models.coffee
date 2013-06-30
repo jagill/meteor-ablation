@@ -18,4 +18,8 @@
 ###
 @Posts = new Meteor.Collection 'posts'
 
-
+###
+# timestamp:
+# message:
+###
+@Notifications = new Meteor.Collection 'notifications'

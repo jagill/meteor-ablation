@@ -68,6 +68,9 @@
 
 <template name="feeds">
 {{#if currentUser}}
+  <div>
+    <span>{{topNotification.message}}</span>
+  </div>
   <ul class="feed-list nav nav-list">
     <li class="nav-header">Feeds</li>
       <li class="{{selectedRecent}}"><a class="recentLink" href="#">Recent Posts</a></li>
@@ -113,6 +116,12 @@
     </div>
 {{else}}
     Please log in.
+  <div>
+    {{#each notifications}}
+      <div>{{message}}</div>
+    {{/each}}
+  </div>
+
 {{/if}}
 
 
@@ -122,8 +131,9 @@
 {{#if currentUser}}
     <div class="row-fluid">
         <div class="span12">
-
-                <h1>{{#if hasFeeds}}<a class="removeFeedButton remove-btn btn btn-small"><i class="icon-remove"></i></a>{{/if}}{{feedTitle}}</h1>
+                {{#if hasActiveFeed}}
+                <h1><a class="removeFeedButton remove-btn btn btn-small"><i class="icon-remove"></i></a>{{feedTitle}}</h1>
+                {{/if}}
                 {{#each posts}}
                     <div class="article-item {{#if isRead _id}} article-item-read {{/if}}">
                         <h2 class="title"><a target="_blank" href="{{url}}">{{title}}</a><span class="time">{{time_ago}}</span></h2>

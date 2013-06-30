@@ -19,6 +19,9 @@ Meteor.publish 'recentPosts', ->
   readPosts = UserInfos.findOne(userId:@userId)?.readPosts || []
   return Posts.find {feedId: {$in: userInfo.feeds}, _id: {$nin: readPosts}}, {sort: {published_at: -1}, limit: 5}
 
+Meteor.publish 'notifications', ->
+  return Notifications.find()
+
 UserInfos.allow
   insert: (userId, doc) ->
     return userId == doc.userId

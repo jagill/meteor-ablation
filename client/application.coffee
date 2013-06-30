@@ -16,12 +16,18 @@ window.MABL = {
         userInfo = {userId:Meteor.userId(), feeds:[value], readPosts:[]}
         UserInfos.insert userInfo
 
+    Template.feeds.helpers
+      topNotification: ->
+        Notifications.findOne {}, {sort: {timestamp: -1}}
+
+      notifications: ->
+        Notifications.find {}, {sort: {timestamp: -1}, limit:10}
+
     Template.feeds.feeds = ->
       Feeds.find()
 
     Template.feeds.selected = ->
       if @._id == Session.get "selectedFeedId"
-        #$(".removeFeedButton").removeClass("hidden")
         return "active"
       else
         return ""
@@ -91,27 +97,25 @@ window.MABL = {
     Template.articles.events
       "click .removeFeedButton": ->
         console.log "remove feed button clicked"
-
+        userInfo = UserInfos.findOne(userId:Meteor.userId())
+        return unless userInfo
         feed = Feeds.findOne Session.get "selectedFeedId"
-        throw new Meteor.Error(401, 'No feed currently selected') unless feed
-
-        result = confirm("Are you sure you want to delete \n"+feed.title+"?");
-        if (result==true)
-          Meteor.call "removeFeed", feed.url, (error) ->
-            return console.error "Error in addFeed:", error if error
-            console.log "Returned from removeFeed"
-            Session.set 'selectedFeedId', Feeds.findOne()?._id
+        result = confirm("Are you sure you want to delete \n"+feed.title+"?")
+        return unless result
+        UserInfos.update userInfo._id, {$pull: {feeds: Session.get "selectedFeedId"}}
+        event.stopPropagation()
         return false
 
       "click .read-btn": (event) ->
-        console.log event
         elId = event.target.id
-        console.log "Clicked element #{elId}"
         postId = elId.split('_')[1]
         userInfoId = UserInfos.findOne(userId:Meteor.userId())?._id
         console.log "Found userInfoId #{userInfoId} for userId #{Meteor.userId()}"
         return unless userInfoId
         UserInfos.update userInfoId, {$push: {readPosts:postId}}
+        post = Posts.findOne postId
+        message = "#{Meteor.user().profile.name} has read #{post.title}"
+        Notifications.insert timestamp:Date.now(), message:message
 
 
       "click .article-item-read .read-btn": (event) ->
@@ -135,8 +139,8 @@ window.MABL = {
       readPosts = UserInfos.findOne(userId:Meteor.userId())?.readPosts || []
       postId in readPosts
 
-    Template.articles.hasFeeds = ->
-      feedId = Session.get "selectedFeedId" ? true : false
+    Template.articles.hasActiveFeed = ->
+      return Session.get 'selectedFeedId'
 
   startup: ->
     @initStickyNav()
