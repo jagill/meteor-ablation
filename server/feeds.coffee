@@ -9,12 +9,15 @@ addFeedToUser = (feedId, userId) ->
     console.log "Making new userInfo"
     UserInfos.insert {userId: userId, feeds: [feedId]}
 
+Meteor.setInterval ->
+  console.log "Refreshing feeds"
+  Meteor.call 'refreshFeeds'
+, 10*1000
 
 Meteor.methods
   addFeed: (url, title) ->
     console.log "Adding feed for #{url} for userId #{@userId}"
     throw new Meteor.Error(401, 'Must be logged in to add a feed') unless @userId
-
     feed = Feeds.findOne url:url
     if feed
       console.log "Found existing feed for #{url}"
@@ -24,51 +27,48 @@ Meteor.methods
       Meteor.http.get url, {}, (error, response) =>
         throw new Meteor.Error(500, error.message) if error
         rssparser.parseString response.content, {}, (error, data) =>
-          articles = data.items
+          posts = data.items
           delete data.items
           #console.log "Feed:", data
-          #console.log "Article count:", articles.length
-          #console.log "First article:", articles[0] if articles
+          #console.log "Article count:", posts.length
+          #console.log "First article:", posts[0] if posts
           data.url = url
           data.title = title if title
           feedId = Feeds.insert data
           addFeedToUser feedId, @userId
-          for article in articles
-            article.feedId = feedId
-            Posts.insert article
+          for post in posts
+            post.feedId = feedId
+            Posts.insert post
 
-###
-# FEED (META) DATA:
-# title
-# description
-# link (website link)
-# xmlurl (the canonical link to the feed, as specified by the feed)
-# date (most recent update)
-# pubdate (original published date)
-# author
-# language
-# image (an Object containing url and title properties)
-# favicon (a link to the favicon -- only provided by Atom feeds)
-# copyright
-# generator
-# categories (an Array of Strings)
-###
+  refreshFeeds: ->
+    Feeds.find().map (feed) ->
+      Meteor.http.get feed.url, {}, (error, response) =>
+        return console.error error if error
+        rssparser.parseString response.content, {}, (error, data) =>
+          posts = data.items
+          #newUrls = _.pluck posts, 'url'
+          #Posts.remove {url: {$nin: newUrls}}
+          for post in posts
+            post.feedId = feed._id
+            existingPost = Posts.findOne url: post.url
+            if existingPost
+              Posts.update existingPost._id, post
+            else
+              Posts.insert post
 
-###
-# ARTICLE DATA
-# title
-# description (frequently, the full article content)
-# summary (frequently, an excerpt of the article content)
-# link
-# origlink (when FeedBurner or Pheedo puts a special tracking url in the link property, origlink contains the original link)
-# date (most recent update)
-# pubdate (original published date)
-# author
-# guid (a unique identifier for the article)
-# comments (a link to the article's comments section)
-# image (an Object containing url and title properties)
-# categories (an Array of Strings)
-# source (an Object containing url and title properties pointing to the original source for an article; see the RSS Spec for an explanation of this element)
-# enclosures (an Array of Objects, each representing a podcast or other enclosure and having a url property and possibly type and length properties)
-# meta (an Object containing all the feed meta properties; especially handy when using the EventEmitter interface to listen to article emissions)
-###
+  removeFeed: (url) ->
+    throw new Meteor.Error(401, 'Must be logged in to remove a feed') unless @userId
+    feed = Feeds.findOne url:url
+    if feed
+      console.log "Feed at #{url} exist, removing for user #{@userId}"
+      Posts.remove {feedId: feed._id}
+
+      userfeeds = UserInfos.findOne({userId: @userId}).feeds
+      if(userfeeds)
+        console.log "Found feeds array, removing feed #{feed._id} from it"
+        index = userfeeds.indexOf feed.feedId
+        userfeeds.splice index, 1
+        UserInfos.update {userId: @userId}, {$set: {feeds: userfeeds}}
+
+      Feeds.remove feed
+
