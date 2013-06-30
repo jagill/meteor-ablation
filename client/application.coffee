@@ -71,9 +71,9 @@ window.MABL = {
         Posts.find()
 
   startup: ->
-    console.log "starting up"
+    @initStickyNav()
 
-
+  initStickyNav: () ->
     fixed = false
     navBar = $(".sidebar-nav")
     threshold = navBar.offset().top
@@ -85,8 +85,6 @@ window.MABL = {
       else if fixed and not belowThreshold
         navBar.removeClass "fixed"
         fixed = false
-
-
 }
 
 window.MABL.init()
