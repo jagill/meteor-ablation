@@ -1,4 +1,4 @@
-Npm.depends({feedparser: '0.16.1'});
+Npm.depends({rssparser: '0.0.4'});
 
 Package.on_use(function(api, where) {
   api.add_files(['feedparser.js'], 'server');
