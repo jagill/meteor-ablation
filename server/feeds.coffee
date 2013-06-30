@@ -44,7 +44,7 @@ Meteor.methods
 
       userfeeds = UserInfos.findOne({userId: @userId}).feeds
       if(userfeeds)
-        console.log "Found feeds array, removing feed #{feed.feedId} from it"
+        console.log "Found feeds array, removing feed #{feed._id} from it"
         index = userfeeds.indexOf feed.feedId
         userfeeds.splice index, 1
         UserInfos.update {userId: @userId}, {$set: {feeds: userfeeds}}
