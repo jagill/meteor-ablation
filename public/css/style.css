@@ -8,6 +8,11 @@
     margin-right:10px;
 }
 
+.nav-list > li > a {
+    text-decoration: none;
+}
+
+
 /* Large desktop */
 @media (min-width: 1200px) {
     .main-container {
