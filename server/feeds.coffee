@@ -23,17 +23,36 @@ Meteor.methods
       Meteor.http.get url, {}, (error, response) =>
         throw new Meteor.Error(500, error.message) if error
         rssparser.parseString response.content, {}, (error, data) =>
-          articles = data.items
+          posts = data.items
           delete data.items
           #console.log "Feed:", data
-          #console.log "Article count:", articles.length
-          #console.log "First article:", articles[0] if articles
+          #console.log "Article count:", posts.length
+          #console.log "First article:", posts[0] if posts
           data.url = url
           feedId = Feeds.insert data
           addFeedToUser feedId, @userId
-          for article in articles
-            article.feedId = feedId
-            Posts.insert article
+          for post in posts
+            post.feedId = feedId
+            Posts.insert post
+
+  refreshFeeds: ->
+    Feeds.find().map (feed) ->
+      Meteor.http.get feed.url, {}, (error, response) =>
+        return console.error error if error
+        rssparser.parseString response.content, {}, (error, data) =>
+          posts = data.items
+          newUrls = _.pluck posts, 'url'
+          Posts.remove {url: {$nin: newUrls}}
+          for post in posts
+            existingPost = Posts.findOne url: post.url
+            if existingPost
+              Posts.update existingPost._id, post
+            else
+              post.feedId = feed._id
+              Posts.insert post
+            
+
+      
 
   removeFeed: (url) ->
     throw new Meteor.Error(401, 'Must be logged in to remove a feed') unless @userId
