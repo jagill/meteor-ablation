@@ -7,6 +7,7 @@ Meteor.methods
       delete response.items
       console.log "Feed:", response
       console.log "Article count:", articles.length
+      console.log "First article:", articles[0] if articles
 
 ###
 # FEED (META) DATA:
