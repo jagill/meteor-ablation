@@ -118,12 +118,11 @@
 </template>
 
 <template name="articles">
-
+{{#if currentUser}}
     <div class="row-fluid">
         <div class="span12">
-                {{#if hasFeeds}}
-                <h1><a class="hidden removeFeedButton remove-btn btn btn-small"><i class="icon-remove"></i></a>{{feedTitle}}</h1>
-                {{/if}}
+
+                <h1>{{#if hasFeeds}}<a class="removeFeedButton remove-btn btn btn-small"><i class="icon-remove"></i></a>{{/if}}{{feedTitle}}</h1>
                 {{#each posts}}
                     <div class="article-item {{#if isRead _id}} article-item-read {{/if}}">
                         <h2 class="title"><a target="_blank" href="{{url}}">{{title}}</a><span class="time">{{time_ago}}</span></h2>
@@ -136,4 +135,5 @@
             </div>
         </div>
     </div>
+{{/if}}
 </template>
