@@ -8,4 +8,6 @@ Meteor.startup ->
   Deps.autorun ->
     Meteor.subscribe 'posts', Session.get 'selectedFeedId'
   Deps.autorun ->
-    Meteor.subscribe 'recentPosts'
+    return unless Meteor.userId()
+    userInfo = UserInfos.findOne(userId:Meteor.userId())
+    Meteor.subscribe 'recentPosts', userInfo?.feeds
