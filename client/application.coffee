@@ -46,9 +46,15 @@ window.MABL = {
           parser=new DOMParser();
           xmlDoc=parser.parseFromString(result,"text/xml")
           window.theResult = xmlDoc
-          feedObjs = $($(theResult).children().children()[1]).children()
-          for obj in feedObjs
-            Meteor.call "addFeed", $(obj).attr("xmlUrl"), $(obj).attr("title")
+          window.crawlTree = (tree, callback)->
+            for child in tree.children()
+              if $(child).children().length > 0
+                crawlTree $(child), callback
+              else if $(child).attr("xmlUrl")
+                callback $(child).attr("xmlUrl"), $(child).attr("title")
+                
+          crawlTree $(theResult), (xmlUrl, title)->
+            Meteor.call "addFeed", xmlUrl, title
 
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
