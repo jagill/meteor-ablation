@@ -1,11 +1,12 @@
 Meteor.methods
   addFeed: (url, userId) ->
-    Meteor.http.get url, {}, (error, result) ->
-      if error
-        return
-
-      #console.log result
-
+    #response: {feed:, articles:}
+    addFeed url, (error, response) ->
+      throw new Meteor.Error(500, error.message) if error
+      articles = response.items
+      delete response.items
+      console.log "Feed:", response
+      console.log "Article count:", articles.length
 
 ###
 # FEED (META) DATA:
