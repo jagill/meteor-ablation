@@ -163,7 +163,6 @@ window.MABL = {
     threshold = (navBar.offset().top - 80)
 
     applyStickyNav = (e) ->
-      console.log "apply sticky nav"
       belowThreshold = $(window).scrollTop() >= threshold
       if not fixed and belowThreshold and navBar.outerHeight() < $(window).height()
         resetNavWidth()
