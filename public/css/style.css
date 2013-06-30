@@ -64,6 +64,11 @@ h1 {
     float:right;
 }
 
+.feed-list {
+    max-height:400px;
+    overflow-y:auto;
+}
+
 .feed-list li:hover .remove-btn {
     display:block;
     visibility: visible;

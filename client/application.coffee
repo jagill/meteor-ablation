@@ -148,11 +148,11 @@ window.MABL = {
   initStickyNav: () ->
     fixed = false
     navBar = $(".sidebar-nav")
-    threshold = navBar.offset().top
+    threshold = (navBar.offset().top - 80)
     $(window).scroll ->
       belowThreshold = $(window).scrollTop() >= threshold
       if not fixed and belowThreshold and navBar.outerHeight() < $(window).height()
-        navBar.css "width":navBar.width()
+        navBar.css "width":(navBar.width() )
         navBar.addClass "fixed"
         fixed = true
       else if fixed and not belowThreshold
