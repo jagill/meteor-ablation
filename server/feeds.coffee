@@ -1,12 +1,9 @@
 rssparser = Meteor.require('rssparser')
 
 addFeedToUser = (feedId, userId) ->
-  console.log "Adding feed #{feedId} to user #{userId}"
   if UserInfos.findOne(userId: userId)
-    console.log "Found existing userInfo"
     UserInfos.update {userId: userId}, {$push: {feeds: feedId}}
   else
-    console.log "Making new userInfo"
     UserInfos.insert {userId: userId, feeds: [feedId], readPosts: []}
 Future = Npm.require('fibers/future')
 
