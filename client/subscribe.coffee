@@ -11,3 +11,5 @@ Meteor.startup ->
     return unless Meteor.userId()
     userInfo = UserInfos.findOne(userId:Meteor.userId())
     Meteor.subscribe 'recentPosts', userInfo?.feeds
+  Deps.autorun ->
+    Meteor.subscribe 'notifications'

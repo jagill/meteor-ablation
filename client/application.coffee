@@ -16,6 +16,13 @@ window.MABL = {
         userInfo = {userId:Meteor.userId(), feeds:[value], readPosts:[]}
         UserInfos.insert userInfo
 
+    Template.feeds.helpers
+      topNotification: ->
+        Notifications.findOne {}, {sort: {timestamp: -1}}
+
+      notifications: ->
+        Notifications.find {}, {sort: {timestamp: -1}, limit:10}
+
     Template.feeds.feeds = ->
       Feeds.find()
 
@@ -103,6 +110,9 @@ window.MABL = {
         console.log "Found userInfoId #{userInfoId} for userId #{Meteor.userId()}"
         return unless userInfoId
         UserInfos.update userInfoId, {$push: {readPosts:postId}}
+        post = Posts.findOne postId
+        message = "#{Meteor.user().profile.name} has read #{post.title}"
+        Notifications.insert timestamp:Date.now(), message:message
 
 
       "click .article-item-read .read-btn": (event) ->

@@ -67,6 +67,9 @@
 
 <template name="feeds">
 {{#if currentUser}}
+  <div>
+    <span>{{topNotification.message}}</span>
+  </div>
   <ul class="feed-list nav nav-list">
     <li class="nav-header">Feeds</li>
       <li class="{{selectedRecent}}"><a class="recentLink" href="#">Recent Posts</a></li>
@@ -112,6 +115,12 @@
     </div>
 {{else}}
     Please log in.
+  <div>
+    {{#each notifications}}
+      <div>{{message}}</div>
+    {{/each}}
+  </div>
+
 {{/if}}
 
 
