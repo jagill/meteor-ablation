@@ -2,6 +2,7 @@ rssparser = Meteor.require('rssparser')
 
 Accounts.onCreateUser (user) ->
   UserInfos.insert {userId: user._id, feeds: [], readPosts: []}
+  return user
 
 addFeedToUser = (feedId, userId) ->
   console.log "Adding feed #{feedId} to user #{userId}"
