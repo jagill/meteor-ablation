@@ -51,7 +51,7 @@ footer {
 
 
 /* Large desktop */
-@media (min-width: 1200px) {
+@media (min-width: 980px) {
     .main-container {
         padding-top:80px;
     }
