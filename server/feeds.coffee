@@ -1,7 +1,9 @@
+rssparser = Meteor.require('rssparser')
+
 Meteor.methods
   addFeed: (url, userId) ->
     #response: {feed:, articles:}
-    addFeed url, (error, response) ->
+    rssparser.parseURL url, {}, (error, response) ->
       throw new Meteor.Error(500, error.message) if error
       articles = response.items
       delete response.items
