@@ -59,6 +59,7 @@ window.MABL = {
       "click .removeFeedButton": ->
         console.log "remove feed button clicked"
         feed = Feeds.findOne Session.get "selectedFeedId"
+        throw new Meteor.Error(401, 'No feed currently selected') unless feed
         Meteor.call "removeFeed", feed.url, (error) ->
             return console.error "Error in addFeed:", error if error
           console.log "Returned from addFeed"
@@ -69,6 +70,10 @@ window.MABL = {
         Posts.find feedId: Session.get("selectedFeedId")
       else
         Posts.find()
+
+    Template.articles.hasFeeds = ->
+      return Feeds.findOne()?
+
 
   startup: ->
     console.log "starting up"
