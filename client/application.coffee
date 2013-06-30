@@ -30,6 +30,7 @@ window.MABL = {
           return console.error "Error in addFeed:", error if error
           console.log "Returned from addFeed with id", feedId
           Session.set 'selectedFeedId', feedId
+          Session.set 'subscribeHack', Meteor.uuid()
         return false
 
     Template.feeds.rendered = =>
@@ -58,6 +59,8 @@ window.MABL = {
                 
           crawlTree $(theResult), (xmlUrl, title)->
             Meteor.call "addFeed", xmlUrl, title
+            Session.set 'subscribeHack', Meteor.uuid()
+            
 
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
