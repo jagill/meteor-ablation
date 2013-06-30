@@ -21,16 +21,17 @@ window.MABL = {
 
     Template.feeds.selected = ->
       if @._id == Session.get "selectedFeedId"
-        $(".removeFeedButton").removeClass("hidden")
+        #$(".removeFeedButton").removeClass("hidden")
         return "active"
       else
         return ""
 
     Template.feeds.selectedRecent = ->
-      if(@._id)
-        return "active"
-      else
+      feedId = Session.get 'selectedFeedId'
+      if feedId
         return ""
+      else
+        return "active"
 
     Template.feeds.events
       "click .feedLink": ->
@@ -131,7 +132,7 @@ window.MABL = {
       postId in readPosts
 
     Template.articles.hasFeeds = ->
-      return Feeds.findOne()?
+      feedId = Session.get "selectedFeedId" ? true : false
 
   startup: ->
     @initStickyNav()
