@@ -25,9 +25,9 @@ window.MABL = {
         feedUrl = $("#addFeedBox").val()
         console.log "feed button clicked"
         Meteor.call "addFeed", feedUrl, (error) ->
+          $('#addFeedModal').modal('hide')
           return console.error "Error in addFeed:", error if error
           console.log "Returned from addFeed"
-
         return false
 
     Template.topArticle.feedTitle = ->

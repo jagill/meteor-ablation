@@ -2,13 +2,19 @@
   "meteor": {},
   "dependencies": {
     "basePackages": {
-      "npm": {}
+      "npm": {},
+      "meteor-file": {}
     },
     "packages": {
       "npm": {
         "git": "https://github.com/arunoda/meteor-npm.git",
         "tag": "v0.1.4",
         "commit": "68ab2b952ab21a5bbba879b37be9385ec8ff6d63"
+      },
+      "meteor-file": {
+        "git": "https://github.com/EventedMind/meteor-file.git",
+        "tag": "v0.0.6",
+        "commit": "b8824eb42d51276ac4c8bc0aa5ca55b6f0872c5e"
       }
     }
   }
