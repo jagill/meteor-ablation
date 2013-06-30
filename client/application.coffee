@@ -33,11 +33,11 @@ window.MABL = {
         return ""
 
     Template.feeds.selectedRecent = ->
-      selectedId = Session.get "selectedFeedId"
-      if(!selectedId)
-        return "active"
-      else
+      feedId = Session.get 'selectedFeedId'
+      if feedId
         return ""
+      else
+        return "active"
 
     Template.feeds.events
       "click .feedLink": ->
@@ -99,6 +99,9 @@ window.MABL = {
         console.log "remove feed button clicked"
         userInfo = UserInfos.findOne(userId:Meteor.userId())
         return unless userInfo
+        feed = Feeds.findOne Session.get "selectedFeedId"
+        result = confirm("Are you sure you want to delete \n"+feed.title+"?")
+        return unless result
         UserInfos.update userInfo._id, {$pull: {feeds: Session.get "selectedFeedId"}}
         event.stopPropagation()
         return false
@@ -139,7 +142,6 @@ window.MABL = {
     Template.articles.hasActiveFeed = ->
       return Session.get 'selectedFeedId'
 
-
   startup: ->
     @initStickyNav()
     @initScrollingDetection()
@@ -151,13 +153,15 @@ window.MABL = {
   initStickyNav: () ->
     fixed = false
     navBar = $(".sidebar-nav")
-    threshold = navBar.offset().top
+    threshold = (navBar.offset().top - 80)
     $(window).scroll ->
       belowThreshold = $(window).scrollTop() >= threshold
       if not fixed and belowThreshold and navBar.outerHeight() < $(window).height()
+        navBar.css "width":(navBar.width() )
         navBar.addClass "fixed"
         fixed = true
       else if fixed and not belowThreshold
+        navBar.css "width":"auto"
         navBar.removeClass "fixed"
         fixed = false
 }

@@ -74,7 +74,7 @@
     <li class="nav-header">Feeds</li>
       <li class="{{selectedRecent}}"><a class="recentLink" href="#">Recent Posts</a></li>
       {{#each feeds}}
-      <li class="{{selected}}"><a class="feedLink" href="#">{{title}}</a></li>
+      <li class="{{selected}}"><a class="feedLink" href="#"> {{title}}</a></li>
     {{/each}}
   </ul>
     <div class="add-feed-form feed-form">
@@ -127,7 +127,7 @@
 </template>
 
 <template name="articles">
-
+{{#if currentUser}}
     <div class="row-fluid">
         <div class="span12">
                 {{#if hasActiveFeed}}
@@ -145,4 +145,5 @@
             </div>
         </div>
     </div>
+{{/if}}
 </template>
