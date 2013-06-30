@@ -74,6 +74,19 @@ window.MABL = {
     console.log "starting up"
 
 
+    fixed = false
+    navBar = $(".sidebar-nav")
+    threshold = navBar.offset().top
+    $(window).scroll ->
+      belowThreshold = $(window).scrollTop() >= threshold
+      if not fixed and belowThreshold and navBar.outerHeight() < $(window).height()
+        navBar.addClass "fixed"
+        fixed = true
+      else if fixed and not belowThreshold
+        navBar.removeClass "fixed"
+        fixed = false
+
+
 }
 
 window.MABL.init()
