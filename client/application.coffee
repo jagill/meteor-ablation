@@ -21,7 +21,6 @@ window.MABL = {
 
     Template.feeds.selected = ->
       if @._id == Session.get "selectedFeedId"
-        $(".removeFeedButton").removeClass("hidden")
         return "active"
       else
         return ""
@@ -91,18 +90,14 @@ window.MABL = {
     Template.articles.events
       "click .removeFeedButton": ->
         console.log "remove feed button clicked"
-        feed = Feeds.findOne Session.get "selectedFeedId"
-        throw new Meteor.Error(401, 'No feed currently selected') unless feed
-        Meteor.call "removeFeed", feed.url, (error) ->
-          return console.error "Error in addFeed:", error if error
-          console.log "Returned from removeFeed"
-          Session.set 'selectedFeedId', Feeds.findOne()?._id
+        userInfo = UserInfos.findOne(userId:Meteor.userId())
+        return unless userInfo
+        UserInfos.update userInfo._id, {$pull: {feeds: Session.get "selectedFeedId"}}
+        event.stopPropagation()
         return false
 
       "click .read-btn": (event) ->
-        console.log event
         elId = event.target.id
-        console.log "Clicked element #{elId}"
         postId = elId.split('_')[1]
         userInfoId = UserInfos.findOne(userId:Meteor.userId())?._id
         console.log "Found userInfoId #{userInfoId} for userId #{Meteor.userId()}"
@@ -131,8 +126,8 @@ window.MABL = {
       readPosts = UserInfos.findOne(userId:Meteor.userId())?.readPosts || []
       postId in readPosts
 
-    Template.articles.hasFeeds = ->
-      return Feeds.findOne()?
+    Template.articles.hasActiveFeed = ->
+      return Session.get 'selectedFeedId'
 
 
   startup: ->

@@ -121,8 +121,8 @@
 
     <div class="row-fluid">
         <div class="span12">
-                {{#if hasFeeds}}
-                <h1><a class="hidden removeFeedButton remove-btn btn btn-small"><i class="icon-remove"></i></a>{{feedTitle}}</h1>
+                {{#if hasActiveFeed}}
+                <h1><a class="removeFeedButton remove-btn btn btn-small"><i class="icon-remove"></i></a>{{feedTitle}}</h1>
                 {{/if}}
                 {{#each posts}}
                     <div class="article-item {{#if isRead _id}} article-item-read {{/if}}">
