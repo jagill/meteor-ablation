@@ -50,11 +50,15 @@ window.MABL = {
         Session.set "selectedFeedId", null
         return false
 
-      "click .feedButton": ->
+      "click .feedButton": (e)->
         feedUrl = $("#addFeedBox").val()
         console.log "feed button clicked"
-        Meteor.call "addFeed", feedUrl, (error, feedId) ->
+        button = $(e.currentTarget)
+        button.val("Processing...")
+
+        Meteor.call "addFeed", feedUrl, (error, feedId) =>
           $('#addFeedModal').modal('hide')
+          button.val("Add Feed")
           return console.error "Error in addFeed:", error if error
           console.log "Returned from addFeed with id", feedId
           #feedId is null if we get a 40X error code

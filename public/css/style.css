@@ -156,6 +156,10 @@ input[type="file"] {
     background-color:#1ABC9C;
 }
 
+.navbar-inverse .navbar-inner {
+    background-color: #2C3E50;
+}
+
 #top-notifications {
     padding:5px 10px;
     background-color: #BDC3C7;
