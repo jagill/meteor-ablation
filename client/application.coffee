@@ -72,6 +72,10 @@ window.MABL = {
 
   startup: ->
     @initStickyNav()
+    @initScrollingDetection()
+
+  initScrollingDetection: () ->
+
 
   initStickyNav: () ->
     fixed = false
