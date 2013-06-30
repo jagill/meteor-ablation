@@ -5,9 +5,22 @@ Meteor.methods
       throw new Meteor.Error(500, error.message) if error
       articles = response.items
       delete response.items
-      console.log "Feed:", response
-      console.log "Article count:", articles.length
-      console.log "First article:", articles[0] if articles
+      #console.log "Feed:", response
+      #console.log "Article count:", articles.length
+      #console.log "First article:", articles[0] if articles
+      response.url = url
+      feedId = Feeds.insert response
+      for article in articles
+        article.feedId = feedId
+        Posts.insert article
+      userInfo = UserInfos.findOne userId: this.userId
+      if userInfo
+        UserInfos.update {userId: this.userId}, {$push: {feeds: feedId}}
+      else
+        userInfo = {userId: this.userId, feeds: [feedId]}
+        UserInfo.insert userInfo
+
+      #userInfos = .userId
 
 ###
 # FEED (META) DATA:
