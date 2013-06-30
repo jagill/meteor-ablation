@@ -17,6 +17,10 @@
     text-decoration: none;
 }
 
+.feed-form {
+    padding:20px 20px 0 15px;
+}
+
 #login-buttons .login-button,
 .accounts-dialog .login-button {
     cursor: pointer;

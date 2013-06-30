@@ -23,8 +23,9 @@ window.MABL = {
 
       "click .feedButton": ->
         feedUrl = $("#addFeedBox").val()
-        Meteor.call "addFeed", feedUrl, Meteor.userId()
-        console.log "feed button clicked" 
+#        Meteor.call "addFeed", feedUrl, Meteor.userId()
+        console.log "feed button clicked"
+        $('#addFeedModal').modal('hide')
         return false
 
     Template.topArticle.feedTitle = ->

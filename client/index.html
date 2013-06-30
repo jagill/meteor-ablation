@@ -51,35 +51,15 @@
             <div class="row-fluid">
                 <div class="span4">
                     <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <p>test</p>
                 </div><!--/span-->
                 <div class="span4">
                     <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <p>test</p>
                 </div><!--/span-->
                 <div class="span4">
                     <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div><!--/span-->
-            </div><!--/row-->
-            <div class="row-fluid">
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div><!--/span-->
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div><!--/span-->
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <p>test</p>
                 </div><!--/span-->
             </div><!--/row-->
         </div><!--/span-->
@@ -121,18 +101,22 @@
     {{/each}}
   </ul>
   
-
-    <button href="#addFeedModal" role="button" data-toggle="modal" id="addFeedBtn" class="btn btn-large">Add Feed</button>
-    <div id="addFeedModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Add New Feed</h3>
-        </div>
-        <div class="modal-body">
-            <form class="addFeed">
-                <input id="addFeedBox" name="something" placeholder="http://" />
-                <input class="feedButton" type="submit" value="Add Feed"/>
-            </form>
+    <div class="feed-form">
+        <button href="#addFeedModal" role="button" data-toggle="modal" id="addFeedBtn" class="btn btn-large">Add Feed</button>
+        <div id="addFeedModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Add New Feed</h3>
+            </div>
+            <div class="modal-body">
+                <form class="addFeed">
+                    <fieldset>
+                        <label>Enter a valid feed url:</label>
+                        <input id="addFeedBox" name="something" placeholder="http://" />
+                        <input class="feedButton" type="submit" value="Add Feed"/>
+                    </fieldset>
+                </form>
+            </div>
         </div>
     </div>
 
