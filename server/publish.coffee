@@ -5,7 +5,7 @@ Meteor.publish 'feeds', ->
   return unless @userId
   userInfo = UserInfos.findOne userId:@userId
   return unless userInfo
-  return Feeds.find _id: {$in: userInfo.feeds}
+  return Feeds.find _id: {$in: userInfo.feeds}, {sort: "title"}
 
 Meteor.publish 'posts', (feedId) ->
   return unless feedId
