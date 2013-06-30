@@ -150,16 +150,25 @@ window.MABL = {
     fixed = false
     navBar = $(".sidebar-nav")
     threshold = (navBar.offset().top - 80)
-    $(window).scroll ->
+
+    applyStickyNav = (e) ->
+      console.log "apply sticky nav"
       belowThreshold = $(window).scrollTop() >= threshold
       if not fixed and belowThreshold and navBar.outerHeight() < $(window).height()
-        navBar.css "width":(navBar.width() )
+        resetNavWidth()
         navBar.addClass "fixed"
         fixed = true
       else if fixed and not belowThreshold
         navBar.css "width":"auto"
         navBar.removeClass "fixed"
         fixed = false
+
+    resetNavWidth = (e) ->
+      navBar.css "width":($("#helperwidthdiv").width() - 40)
+
+
+    $(window).scroll applyStickyNav
+    $(window).resize resetNavWidth
 }
 
 window.MABL.init()
