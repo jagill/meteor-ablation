@@ -1,12 +1,25 @@
 window.MABL = {
   seedDatabase: ->
     console.log "seeding the database"
-    Meteor.call "addFeed", "http://feeds.feedburner.com/AVc", Meteor.userId()
-    Meteor.call "addFeed", "http://biritemarket.com/feed/", Meteor.userId()
-    Meteor.call "addFeed", "http://bootiemashup.com/blog/feed", Meteor.userId()
-    Meteor.call "addFeed", "http://blog.getbootstrap.com/feed.xml", Meteor.userId()
+    Meteor.call "addFeed", "http://feeds.feedburner.com/AVc"
+    Meteor.call "addFeed", "http://biritemarket.com/feed/"
+    Meteor.call "addFeed", "http://bootiemashup.com/blog/feed"
+    Meteor.call "addFeed", "http://blog.getbootstrap.com/feed.xml"
 
   init: ->
+    addToUserInfo = (field, value) ->
+      return unless Meteor.userId()
+      userInfo = UserInfos.findOne(userId:Meteor.userId())
+      unless userInfo
+        userInfo = {userId:Meteor.userId()}
+        created = true
+      userInfo[field] ?= []
+      userInfo[field].push value
+      if created
+        UserInfos.insert userInfo
+      else
+        UserInfos.update userInfo._id, userInfo
+
     Template.feeds.feeds = ->
       Feeds.find()
 
@@ -40,8 +53,10 @@ window.MABL = {
           $('#addFeedModal').modal('hide')
           return console.error "Error in addFeed:", error if error
           console.log "Returned from addFeed with id", feedId
-          Session.set 'selectedFeedId', feedId
-          Session.set 'subscribeHack', Meteor.uuid()
+          #feedId is null if we get a 40X error code
+          if feedId
+            Session.set 'selectedFeedId', feedId
+            addToUserInfo 'feeds', feedId
         return false
 
     Template.feeds.rendered = =>
@@ -54,25 +69,24 @@ window.MABL = {
           callback(event.target.result)
         reader.onerror = ->
           document.getElementById('file-content').innerHTML = 'Unable to read ' + file.fileName
-      if(@user)
-        document.getElementById("uploadFile").onchange = ->
-          readFileAsText @files[0], (result)->
-  #          console.log "XML", result
-            parser=new DOMParser()
-            xmlDoc=parser.parseFromString(result,"text/xml")
-            theResult = xmlDoc
-            crawlTree = (tree, callback)->
-              for child in tree.children()
-                if $(child).children().length > 0
-                  crawlTree $(child), callback
-                else if $(child).attr("xmlUrl")
-                  callback $(child).attr("xmlUrl"), $(child).attr("title")
 
-            crawlTree $(theResult), (xmlUrl, title)->
-              Meteor.call "addFeed", xmlUrl, title, (error, feedId) ->
-                Session.set 'subscribeHack', Meteor.uuid() unless error
-
-
+      document.getElementById("uploadFile")?.onchange = ->
+        readFileAsText @files[0], (result)->
+#          console.log "XML", result
+          parser=new DOMParser()
+          xmlDoc=parser.parseFromString(result,"text/xml")
+          theResult = xmlDoc
+          crawlTree = (tree, callback)->
+            for child in tree.children()
+              if $(child).children().length > 0
+                crawlTree $(child), callback
+              else if $(child).attr("xmlUrl")
+                callback $(child).attr("xmlUrl"), $(child).attr("title")
+                
+          crawlTree $(theResult), (xmlUrl, title)->
+            Meteor.call "addFeed", xmlUrl, title, (error, feedId) ->
+              addToUserInfo 'feeds', feedId if feedId
+            
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
       return feed.title if feed

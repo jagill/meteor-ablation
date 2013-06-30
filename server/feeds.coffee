@@ -1,16 +1,10 @@
 rssparser = Meteor.require('rssparser')
-
-addFeedToUser = (feedId, userId) ->
-  if UserInfos.findOne(userId: userId)
-    UserInfos.update {userId: userId}, {$push: {feeds: feedId}}
-  else
-    UserInfos.insert {userId: userId, feeds: [feedId], readPosts: []}
 Future = Npm.require('fibers/future')
 
 Meteor.setInterval ->
   console.log "Refreshing feeds"
   Meteor.call 'refreshFeeds'
-, 10*1000
+, 30*1000
 
 Meteor.methods
   addFeed: (url, title) ->
@@ -19,7 +13,6 @@ Meteor.methods
     feed = Feeds.findOne url:url
     if feed
       console.log "Found existing feed for #{url}"
-      addFeedToUser feed._id, @userId
       return feed._id
     else
       console.log "Getting new feed #{url}"
@@ -34,7 +27,6 @@ Meteor.methods
           data.url = url
           data.title = title if title
           feedId = Feeds.insert data
-          addFeedToUser feedId, @userId
           for post in posts
             post.feedId = feedId
             post.feedTitle = data.title
@@ -55,7 +47,8 @@ Meteor.methods
             post.feedTitle = feed.title
             existingPost = Posts.findOne url: post.url
             if existingPost
-              Posts.update existingPost._id, post
+              #Posts.update existingPost._id, post
+              0
             else
               Posts.insert post
 

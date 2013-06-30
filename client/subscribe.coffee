@@ -2,7 +2,9 @@ Meteor.startup ->
   Deps.autorun ->
     Meteor.subscribe 'userInfos'
   Deps.autorun ->
-    Meteor.subscribe 'feeds', Session.get 'subscribeHack'
+    return unless Meteor.userId()
+    userInfo = UserInfos.findOne(userId:Meteor.userId())
+    Meteor.subscribe 'feeds', userInfo?.feeds
   Deps.autorun ->
     Meteor.subscribe 'posts', Session.get 'selectedFeedId'
   Deps.autorun ->
