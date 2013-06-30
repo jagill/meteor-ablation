@@ -68,7 +68,8 @@
 <template name="feeds">
   <ul class="feed-list nav nav-list">
     <li class="nav-header">Feeds</li>
-    {{#each feeds}}
+      <li class="{{selectedRecent}}"><a class="recentLink" href="#">Recent posts</a></li>
+      {{#each feeds}}
       <li class="{{selected}}"><a class="feedLink" href="#">{{title}}</a></li>
     {{/each}}
   </ul>

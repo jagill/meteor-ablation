@@ -17,9 +17,20 @@ window.MABL = {
       else
         return ""
 
+    Template.feeds.selectedRecent = ->
+      selectedId = Session.get "selectedFeedId"
+      if(!selectedId)
+        return "active"
+      else
+        return ""
+
     Template.feeds.events
       "click .feedLink": ->
         Session.set "selectedFeedId", @._id
+        return false
+
+      "click .recentLink": ->
+        Session.set "selectedFeedId", null
         return false
 
       "click .feedButton": ->
