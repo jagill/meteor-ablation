@@ -129,7 +129,8 @@
   <h1>{{feedTitle}}</h1>
   <ul>
   {{#each posts}}
-  <li>{{title}}</li>
+  <li><strong><a href="{{url}}">{{title}}</a></strong> - {{time_ago}}</li>
+  {{{summary}}}
   {{/each}}
   </ul>
 </template>
