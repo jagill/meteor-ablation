@@ -30,7 +30,6 @@
             <a class="brand" href="#"><img src="images/logo-small.jpg" />Meteor Ablation RSS Reader</a>
             <div class="login-nav nav-collapse collapse">
                 <p class="navbar-text pull-right">
-                    <a onclick="window.MABL.seedDatabase()">Seed Database</a>
                     {{loginButtons}}
                 </p>
 
@@ -76,6 +75,10 @@
     {{/each}}
   </ul>
   
+  <form class="importGoogleStuff">
+    <input type="file" id="uploadFile"/>
+  </form>
+
     <div class="feed-form">
         <button href="#addFeedModal" role="button" data-toggle="modal" id="addFeedBtn" class="btn btn-large">Add Feed</button>
         <div id="addFeedModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
