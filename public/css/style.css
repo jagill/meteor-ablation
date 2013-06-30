@@ -36,10 +36,29 @@ h1 {
     position: absolute;
     bottom:10px;
     right:10px;
+    background:#efefef;
+    color:#ccc;
+    /*transition: background .10s ease-in-out;*/
+    /*-moz-transition: background .10s ease-in-out;*/
+    /*-webkit-transition: background .10s ease-in-out;*/
+}
+
+.remove-btn {
+    float:right;
+}
+
+.feed-list li:hover .remove-btn {
+    display:block;
+    visibility: visible;
+}
+
+.article-item:hover .read-btn:hover {
+    background: #e6e6e6;
 }
 
 .article-item-read .read-btn {
-    background:white;
+    background: #e6e6e6;
+    color:white;
 }
 
 

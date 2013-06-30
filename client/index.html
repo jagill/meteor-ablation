@@ -9,6 +9,7 @@
 
     <!-- Loading Flat UI -->
     <link href="css/flat-ui.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
     <link rel="shortcut icon" href="images/favicon.ico">
@@ -68,17 +69,9 @@
 </body>
 
 <template name="feeds">
-  <ul class="nav nav-list">
+  <ul class="feed-list nav nav-list">
     <li class="nav-header">Feeds</li>
     {{#each feeds}}
-{{! Examples of 
-
-   <li class="active"><a href="#">Link</a></li>
-    <li><a href="#">Link</a></li>
-    <li><a href="#">Link</a></li>
-    <li><a href="#">Link</a></li>
-    <li class="nav-header">Sidebar</li>
-}}
       <li class="{{selected}}"><a class="feedLink" href="#">{{title}}</a></li>
     {{/each}}
   </ul>
@@ -110,7 +103,7 @@
 
     <div class="row-fluid">
         <div class="span12">
-                <h1>{{feedTitle}}</h1>
+                <h1><a class="remove-btn btn btn-small"><i class="icon-remove"></i></a>{{feedTitle}}</h1>
 
                 {{#each posts}}
                     <div class="article-item">
