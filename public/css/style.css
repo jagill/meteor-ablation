@@ -45,6 +45,8 @@ h1 {
     font-size: 1.5em;
 }
 
+.sidebar-nav.fixed { position: fixed; top: 60px; width: 210px; margin-top:20px; }
+
 .article-item:hover .read-btn {
     display:block;
     visibility: visible;

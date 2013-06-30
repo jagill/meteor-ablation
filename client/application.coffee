@@ -46,9 +46,15 @@ window.MABL = {
           parser=new DOMParser();
           xmlDoc=parser.parseFromString(result,"text/xml")
           window.theResult = xmlDoc
-          feedObjs = $($(theResult).children().children()[1]).children()
-          for obj in feedObjs
-            Meteor.call "addFeed", $(obj).attr("xmlUrl"), $(obj).attr("title")
+          window.crawlTree = (tree, callback)->
+            for child in tree.children()
+              if $(child).children().length > 0
+                crawlTree $(child), callback
+              else if $(child).attr("xmlUrl")
+                callback $(child).attr("xmlUrl"), $(child).attr("title")
+                
+          crawlTree $(theResult), (xmlUrl, title)->
+            Meteor.call "addFeed", xmlUrl, title
 
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
@@ -59,6 +65,7 @@ window.MABL = {
       "click .removeFeedButton": ->
         console.log "remove feed button clicked"
         feed = Feeds.findOne Session.get "selectedFeedId"
+        throw new Meteor.Error(401, 'No feed currently selected') unless feed
         Meteor.call "removeFeed", feed.url, (error) ->
             return console.error "Error in addFeed:", error if error
           console.log "Returned from addFeed"
@@ -85,10 +92,29 @@ window.MABL = {
       else
         Posts.find _id: {$nin: userInfo.readPosts}
 
+    Template.articles.hasFeeds = ->
+      return Feeds.findOne()?
+
+
   startup: ->
-    console.log "starting up"
+    @initStickyNav()
+    @initScrollingDetection()
+
+  initScrollingDetection: () ->
 
 
+  initStickyNav: () ->
+    fixed = false
+    navBar = $(".sidebar-nav")
+    threshold = navBar.offset().top
+    $(window).scroll ->
+      belowThreshold = $(window).scrollTop() >= threshold
+      if not fixed and belowThreshold and navBar.outerHeight() < $(window).height()
+        navBar.addClass "fixed"
+        fixed = true
+      else if fixed and not belowThreshold
+        navBar.removeClass "fixed"
+        fixed = false
 }
 
 window.MABL.init()
