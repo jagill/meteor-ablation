@@ -40,7 +40,7 @@ Meteor.methods
     feed = Feeds.findOne url:url
     if feed
       console.log "Feed at #{url} exist, removing for user #{@userId}"
-      Posts.remove {feedId: feed.feedId}
+      Posts.remove {feedId: feed._id}
 
       userfeeds = UserInfos.findOne({userId: @userId}).feeds
       if(userfeeds)
