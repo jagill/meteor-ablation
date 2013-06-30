@@ -54,24 +54,24 @@ window.MABL = {
           callback(event.target.result)
         reader.onerror = ->
           document.getElementById('file-content').innerHTML = 'Unable to read ' + file.fileName
+      if(@user)
+        document.getElementById("uploadFile").onchange = ->
+          readFileAsText @files[0], (result)->
+  #          console.log "XML", result
+            parser=new DOMParser()
+            xmlDoc=parser.parseFromString(result,"text/xml")
+            theResult = xmlDoc
+            crawlTree = (tree, callback)->
+              for child in tree.children()
+                if $(child).children().length > 0
+                  crawlTree $(child), callback
+                else if $(child).attr("xmlUrl")
+                  callback $(child).attr("xmlUrl"), $(child).attr("title")
 
-      document.getElementById("uploadFile").onchange = ->
-        readFileAsText @files[0], (result)->
-#          console.log "XML", result
-          parser=new DOMParser()
-          xmlDoc=parser.parseFromString(result,"text/xml")
-          theResult = xmlDoc
-          crawlTree = (tree, callback)->
-            for child in tree.children()
-              if $(child).children().length > 0
-                crawlTree $(child), callback
-              else if $(child).attr("xmlUrl")
-                callback $(child).attr("xmlUrl"), $(child).attr("title")
-                
-          crawlTree $(theResult), (xmlUrl, title)->
-            Meteor.call "addFeed", xmlUrl, title, (error, feedId) ->
-              Session.set 'subscribeHack', Meteor.uuid() unless error
-            
+            crawlTree $(theResult), (xmlUrl, title)->
+              Meteor.call "addFeed", xmlUrl, title, (error, feedId) ->
+                Session.set 'subscribeHack', Meteor.uuid() unless error
+
 
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"
