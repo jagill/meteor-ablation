@@ -4,6 +4,7 @@ Meteor.publish 'userInfos', ->
 Meteor.publish 'feeds', ->
   return unless @userId
   userInfo = UserInfos.findOne userId:@userId
+  return unless userInfo
   return Feeds.find _id: {$in: userInfo.feeds}
 
 Meteor.publish 'posts', (feedId) ->
@@ -12,6 +13,7 @@ Meteor.publish 'posts', (feedId) ->
 
 Meteor.publish 'recentPosts', ->
   return unless @userId
+  return unless userInfo
   userInfo = UserInfos.findOne userId:@userId
   return Posts.find {feedId: {$in: userInfo.feeds}}, {sort: {published_at: -1}, limit: 5}
 
