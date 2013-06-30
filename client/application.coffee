@@ -36,11 +36,7 @@ window.MABL = {
       Posts.find feedId: Session.get("selectedFeedId")
 
   startup: ->
-    $ ->
-      $('#addFeedBtn').click (e) ->
-        e.preventDefault()
-        console.log $('#addFeedModal')
-        $('#addFeedModal').modal()
+    console.log "starting up"
 
 
 }
