@@ -14,8 +14,6 @@
 
     <link rel="shortcut icon" href="images/favicon.ico">
 
-    <script src="js/jquery.viewport.js"></script>
-
 </head>
 <body>
 
@@ -124,7 +122,7 @@
                 <h1><a class="hidden removeFeedButton remove-btn btn btn-small"><i class="icon-remove"></i></a>{{feedTitle}}</h1>
                 {{/if}}
                 {{#each posts}}
-                    <div class="article-item">
+                    <div class="article-item {{#if isRead _id}} article-item-read {{/if}}">
                         <h2 class="title"><a target="_blank" href="{{url}}">{{title}}</a><span class="time">{{time_ago}}</span></h2>
                         <div class="summary">{{{summary}}}</div>
                         <a id="markread_{{_id}}" class="read-btn hidden btn btn-small"><i id="markreadicon_{{_id}}" class="icon-ok"></i></a>

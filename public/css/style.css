@@ -82,6 +82,8 @@ h1 {
 .article-item-read {
     background: #ECF0F1;
     border: 1px solid #e3e3e3;
+    height:60px;
+    overflow-y: hidden;
 }
 
 .article-item .title {

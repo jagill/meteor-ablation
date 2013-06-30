@@ -85,15 +85,27 @@ window.MABL = {
         return unless userInfoId
         UserInfos.update userInfoId, {$push: {readPosts:postId}}
 
+
+      "click .article-item-read .read-btn": (event) ->
+        console.log event
+        elId = event.target.id
+        console.log "Clicked element #{elId}"
+        postId = elId.split('_')[1]
+        userInfoId = UserInfos.findOne(userId:Meteor.userId())?._id
+        console.log "Found userInfoId #{userInfoId} for userId #{Meteor.userId()}"
+        return unless userInfoId
+        UserInfos.update userInfoId, {$pull: {readPosts:postId}}
+
+
     Template.articles.posts = ->
-      readPosts = UserInfos.findOne(userId:Meteor.userId())?.readPosts || []
       if Session.get("selectedFeedId")
-        Posts.find
-          feedId: Session.get("selectedFeedId"),
-          _id: {$nin: readPosts}
-          
+        Posts.find feedId: Session.get("selectedFeedId")
       else
-        Posts.find _id: {$nin: readPosts}
+        Posts.find()
+
+    Template.articles.isRead = (postId) ->
+      readPosts = UserInfos.findOne(userId:Meteor.userId())?.readPosts || []
+      postId in readPosts
 
     Template.articles.hasFeeds = ->
       return Feeds.findOne()?
