@@ -16,7 +16,7 @@ window.MABL = {
         userInfo = {userId:Meteor.userId(), feeds:[value], readPosts:[]}
         UserInfos.insert userInfo
 
-    Template.feeds.helpers
+    Template.feedNotifications.helpers
       topNotification: ->
         Notifications.findOne {}, {sort: {timestamp: -1}}
 

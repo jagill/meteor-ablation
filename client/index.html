@@ -38,6 +38,13 @@
 
 <div class="container-fluid main-container">
     <div class="row-fluid">
+        <div class="span12">
+            <div id="top-notifications">
+                {{> feedNotifications}}
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid">
         <div class="span3">
             <div id="helperwidthdiv"></div>
             <div class="well sidebar-nav">
@@ -68,9 +75,7 @@
 
 <template name="feeds">
 {{#if currentUser}}
-  <div>
-    <span>{{topNotification.message}}</span>
-  </div>
+
   <ul class="feed-list nav nav-list">
     <li class="nav-header">Feeds</li>
       <li class="{{selectedRecent}}"><a class="recentLink" href="#">Recent Posts</a></li>
@@ -116,15 +121,21 @@
     </div>
 {{else}}
     Please log in.
-  <div>
-    {{#each notifications}}
-      <div>{{message}}</div>
-    {{/each}}
-  </div>
-
 {{/if}}
 
 
+</template>
+
+<template name="feedNotifications">
+    {{#if currentUser}}
+        <i class="icon-info-sign"></i> {{topNotification.message}}
+    {{else}}
+        <ul>
+            {{#each notifications}}
+                <li class="notification-item"><i class="icon-info-sign"></i> {{message}}</li>
+            {{/each}}
+        </ul>
+    {{/if}}
 </template>
 
 <template name="articles">
