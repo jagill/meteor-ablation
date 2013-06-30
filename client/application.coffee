@@ -64,11 +64,26 @@ window.MABL = {
           console.log "Returned from addFeed"
         return false
 
+      "click .read-btn": (event) ->
+        console.log event
+        elId = event.target.id
+        console.log "Clicked element #{elId}"
+        postId = elId.split('_')[1]
+        userInfoId = UserInfos.findOne(userId:Meteor.userId())?._id
+        console.log "Found userInfoId #{userInfoId} for userId #{Meteor.userId()}"
+        return unless userInfoId
+        UserInfos.update userInfoId, {$push: {readPosts:postId}}
+
     Template.articles.posts = ->
+      userInfo = UserInfos.findOne(userId:Meteor.userId())
+      return unless userInfo
       if Session.get("selectedFeedId")
-        Posts.find feedId: Session.get("selectedFeedId")
+        Posts.find
+          feedId: Session.get("selectedFeedId"),
+          _id: {$nin: userInfo.readPosts}
+          
       else
-        Posts.find()
+        Posts.find _id: {$nin: userInfo.readPosts}
 
   startup: ->
     console.log "starting up"
@@ -79,5 +94,5 @@ window.MABL = {
 window.MABL.init()
 
 Meteor.startup( () ->
-  window.MABL.startup();
+  window.MABL.startup()
 )
