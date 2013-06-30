@@ -1,29 +1,40 @@
 rssparser = Meteor.require('rssparser')
 
-Meteor.methods
-  addFeed: (url, userId) ->
-    #response: {feed:, articles:}
-    Meteor.http.get url, {}, (error, response) ->
-      throw new Meteor.Error(500, error.message) if error
-      rssparser.parseString response.content, {}, (error, data) ->
-        articles = data.items
-        delete data.items
-        #console.log "Feed:", data
-        #console.log "Article count:", articles.length
-        #console.log "First article:", articles[0] if articles
-        data.url = url
-        feedId = Feeds.insert data
-        for article in articles
-          article.feedId = feedId
-          Posts.insert article
-        userInfo = UserInfos.findOne userId: this.userId
-        if userInfo
-          UserInfos.update {userId: this.userId}, {$push: {feeds: feedId}}
-        else
-          userInfo = {userId: this.userId, feeds: [feedId]}
-          UserInfos.insert userInfo
+addFeedToUser = (feedId, userId) ->
+  console.log "Adding feed #{feedId} to user #{userId}"
+  if UserInfos.findOne(userId: userId)
+    console.log "Found existing userInfo"
+    UserInfos.update {userId: userId}, {$push: {feeds: feedId}}
+  else
+    console.log "Making new userInfo"
+    UserInfos.insert {userId: userId, feeds: [feedId]}
 
-      #userInfos = .userId
+
+Meteor.methods
+  addFeed: (url) ->
+    console.log "Adding feed for #{url} for userId #{@userId}"
+    throw new Meteor.Error(401, 'Must be logged in to add a feed') unless @userId
+
+    feed = Feeds.findOne url:url
+    if feed
+      console.log "Found existing feed for #{url}"
+      addFeedToUser feed._id, @userId
+    else
+      console.log "Getting new feed #{url}"
+      Meteor.http.get url, {}, (error, response) =>
+        throw new Meteor.Error(500, error.message) if error
+        rssparser.parseString response.content, {}, (error, data) =>
+          articles = data.items
+          delete data.items
+          #console.log "Feed:", data
+          #console.log "Article count:", articles.length
+          #console.log "First article:", articles[0] if articles
+          data.url = url
+          feedId = Feeds.insert data
+          addFeedToUser feedId, @userId
+          for article in articles
+            article.feedId = feedId
+            Posts.insert article
 
 ###
 # FEED (META) DATA:
