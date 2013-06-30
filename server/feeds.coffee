@@ -23,7 +23,18 @@ Meteor.methods
           userInfo = {userId: this.userId, feeds: [feedId]}
           UserInfos.insert userInfo
 
-      #userInfos = .userId
+  removeFeed: (url) ->
+    feed = Feeds.findOne url:url
+    if feed
+      Posts.remove {feedId: feed.feedId}
+
+      userfeeds = UserInfos.findOne({userId: @userId}).feeds
+      if(userfeeds)
+        index = userfeeds.indexOf feed.feedId
+        userfeeds.splice index, 1
+        UserInfos.update {userId: @userId}, {$push: {feeds: userfeeds}}
+
+      Feeds.remove feed
 
 ###
 # FEED (META) DATA:
