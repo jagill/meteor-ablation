@@ -123,15 +123,20 @@
       <li class="{{selected}}"><a class="feedLink" href="#">{{title}}</a></li>
     {{/each}}
   </ul>
+  
+  <h3>Add Feed Here</h3>
+  <form class="addFeed">
+    <input id="addFeedBox" name="something" value="http://" />
+    <input class="feedButton" type="submit" value="Add Feed"/>
+  </form>
+
 </template>
 
 <template name="topArticle">
   <h1>{{feedTitle}}</h1>
-  <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
   <ul>
   {{#each posts}}
   <li>{{title}}</li>
   {{/each}}
   </ul>
-  <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </template>
