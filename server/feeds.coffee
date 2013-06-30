@@ -6,6 +6,11 @@ Meteor.setInterval ->
   Meteor.call 'refreshFeeds'
 , 30*1000
 
+addFeedNotification = (feed, userId) ->
+  user = Meteor.users.findOne userId
+  return unless user
+  Notifications.insert timestamp:Date.now(), message: "#{user.profile.name} just added #{feed.title}"
+
 Meteor.methods
   addFeed: (url, title) ->
     console.log "Adding feed for #{url} for userId #{@userId}"
@@ -33,6 +38,7 @@ Meteor.methods
             post.feedId = feedId
             post.feedTitle = data.title
             Posts.insert post
+          addFeedNotification data, @userId
           future.ret(feedId)
       return future.wait()
 
