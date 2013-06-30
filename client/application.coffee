@@ -90,12 +90,16 @@ window.MABL = {
     Template.articles.events
       "click .removeFeedButton": ->
         console.log "remove feed button clicked"
+
         feed = Feeds.findOne Session.get "selectedFeedId"
         throw new Meteor.Error(401, 'No feed currently selected') unless feed
-        Meteor.call "removeFeed", feed.url, (error) ->
-          return console.error "Error in addFeed:", error if error
-          console.log "Returned from removeFeed"
-          Session.set 'selectedFeedId', Feeds.findOne()?._id
+
+        result = confirm("Are you sure you want to delete \n"+feed.title+"?");
+        if (result==true)
+          Meteor.call "removeFeed", feed.url, (error) ->
+            return console.error "Error in addFeed:", error if error
+            console.log "Returned from removeFeed"
+            Session.set 'selectedFeedId', Feeds.findOne()?._id
         return false
 
       "click .read-btn": (event) ->
