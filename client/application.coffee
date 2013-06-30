@@ -12,6 +12,7 @@ window.MABL = {
 
     Template.feeds.selected = ->
       if @._id == Session.get "selectedFeedId"
+        $(".removeFeedButton").removeClass("hidden")
         return "active"
       else
         return ""
@@ -30,7 +31,8 @@ window.MABL = {
           console.log "Returned from addFeed"
         return false
 
-    Template.feeds.rendered = ->
+    Template.feeds.rendered = =>
+
       readFileAsText = (file, callback)->
         reader = new FileReader
         reader.readAsText(file);
@@ -85,8 +87,9 @@ window.MABL = {
     @initStickyNav()
     @initScrollingDetection()
 
-  initScrollingDetection: () ->
 
+  initScrollingDetection: () ->
+    #todo mark as read as scrolled
 
   initStickyNav: () ->
     fixed = false
