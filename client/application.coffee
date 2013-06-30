@@ -7,18 +7,14 @@ window.MABL = {
     Meteor.call "addFeed", "http://blog.getbootstrap.com/feed.xml"
 
   init: ->
-    addToUserInfo = (field, value) ->
+    addFeedToUser = (value) ->
       return unless Meteor.userId()
       userInfo = UserInfos.findOne(userId:Meteor.userId())
-      unless userInfo
-        userInfo = {userId:Meteor.userId()}
-        created = true
-      userInfo[field] ?= []
-      userInfo[field].push value
-      if created
-        UserInfos.insert userInfo
+      if userInfo
+        UserInfos.update userInfo._id, {$push: {feeds:value}}
       else
-        UserInfos.update userInfo._id, userInfo
+        userInfo = {userId:Meteor.userId(), feeds:[value], readPosts:[]}
+        UserInfos.insert userInfo
 
     Template.feeds.feeds = ->
       Feeds.find()
@@ -56,7 +52,7 @@ window.MABL = {
           #feedId is null if we get a 40X error code
           if feedId
             Session.set 'selectedFeedId', feedId
-            addToUserInfo 'feeds', feedId
+            addFeedToUser feedId
         return false
 
     Template.feeds.rendered = =>
@@ -85,7 +81,7 @@ window.MABL = {
                 
           crawlTree $(theResult), (xmlUrl, title)->
             Meteor.call "addFeed", xmlUrl, title, (error, feedId) ->
-              addToUserInfo 'feeds', feedId if feedId
+              addFeedToUser feedId if feedId
             
     Template.articles.feedTitle = ->
       feed = Feeds.findOne Session.get "selectedFeedId"

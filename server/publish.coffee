@@ -20,5 +20,8 @@ Meteor.publish 'recentPosts', ->
   return Posts.find {feedId: {$in: userInfo.feeds}, _id: {$nin: readPosts}}, {sort: {published_at: -1}, limit: 5}
 
 UserInfos.allow
+  insert: (userId, doc) ->
+    return userId == doc.userId
+
   update: (userId, doc, fieldNames, modifier) ->
     return userId == doc.userId

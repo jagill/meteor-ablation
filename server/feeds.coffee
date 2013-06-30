@@ -22,6 +22,8 @@ Meteor.methods
           return future.ret null
         throw new Meteor.Error(response.statusCode, error.message) if error
         rssparser.parseString response.content, {}, (error, data) =>
+          throw new Meteor.Error(500, error.message) if error
+          console.log "XML:", data
           posts = data.items
           delete data.items
           data.url = url
